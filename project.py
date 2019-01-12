@@ -52,7 +52,7 @@ def change_score(data):
                 if 0 <= point <= 100:
                     show_table()
                     show_label(x)
-                    x[2] = point
+                    x[2] = str(point)
                     x[4] = get_avg(x)
                     x[5] = get_grade(x)
                     print("Score changed.")
@@ -64,13 +64,14 @@ def change_score(data):
                 if 0 <= point <= 100:
                     show_table()
                     show_label(x)
-                    x[3] = point
+                    x[3] = str(point)
                     x[4] = get_avg(x)
                     x[5] = get_grade(x)
                     print("Score changed.")
                     show_label(x)
                     print()
 
+            data_sort(data)
             print()
             return
     print("NO SUCH PERSON.")
@@ -78,7 +79,27 @@ def change_score(data):
 
 
 def search_grade(data):
-    pass
+    grade = input("Grade to search: ")
+    grade_list = ['A', 'B', 'C', 'D', 'F']
+
+    if grade not in grade_list:
+        print()
+        return
+
+    is_grade = False
+    for x in data:
+        if grade == x[5]:
+            is_grade = True
+
+    if is_grade is True:
+        show_table()
+        for x in data:
+            if grade == x[5]:
+                show_label(x)
+        print()
+    else:
+        print("NO RESULTS.")
+    print()
 
 
 def add_data(data):
@@ -102,12 +123,27 @@ def add_data(data):
     print()
 
 
-def remove_data():
-    print("remove data")
+def remove_data(data):
+    if len(data) == 0:
+        print("List is empty.")
+        print()
+        return
+
+    std_id = input("Student ID: ")
+    for x in data:
+        if std_id == x[0]:
+            data.remove(x)
+            print("Student removed.")
+            print()
+            return
+    print("NO SUCH PERSON.")
+    print()
 
 
-def quit_program():
-    print("quit")
+def quit_program(data):
+    save = input("Save data?[yes/no] ")
+    if save == "yes":
+        write_file(data)
 
 
 def input_command():
@@ -117,9 +153,9 @@ def input_command():
 
 def read_file():
     args = sys.argv[1:]
-    file_name = "students.txt"
+    filename = "students.txt"
     if len(args) == 1:
-        file_name = args[0]
+        filename = args[0]
     elif len(args) == 0:
         pass
     else:
@@ -128,16 +164,20 @@ def read_file():
         print("python project.py [filename.txt]")
         return -1
 
-    if not os.path.exists(file_name):
-        print("No", file_name, "file")
+    if not os.path.exists(filename):
+        print("No", filename, "file")
         return -1
 
-    with open(file_name, "r") as f:
+    with open(filename, "r") as f:
         return f.readlines()
 
 
-def write_file():
-    print("file write")
+def write_file(data):
+    filename = input("File name: ")
+    with open(filename, "w") as f:
+        for x in data:
+            stu = str(x[0]) + '\t' + x[1] + '\t' + str(x[2]) + '\t' + str(x[3]) + '\n'
+            f.write(stu)
 
 
 def get_avg(l):
@@ -195,17 +235,17 @@ def main():
         elif comm == "changescore":
             change_score(data)
         elif comm == "searchgrade":
-            search_grade()
+            search_grade(data)
         elif comm == "add":
             add_data(data)
         elif comm == "remove":
-            remove_data()
+            remove_data(data)
         elif comm == "quit":
             break
         else:
             continue
 
-    quit_program()
+    quit_program(data)
 
 
 if __name__ == '__main__':
