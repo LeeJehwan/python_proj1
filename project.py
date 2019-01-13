@@ -263,7 +263,6 @@ def main():
     if data == -1:
         return
     data = data_processing(data)
-    print(data)
     show(data)
     while True:
         comm = input_command()
