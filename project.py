@@ -1,5 +1,24 @@
 import sys
 import os
+import readline
+
+
+class AutoComplete:
+    def __init__(self, commands):
+        self.commands = commands
+
+    def complete(self, text, state):
+        for cmd in self.commands:
+            if cmd.startswith(text.lower()):
+                if not state:
+                    return cmd
+                else:
+                    state -= 1
+
+
+def auto_command_complete(commands):
+    auto = AutoComplete(commands)
+    readline.set_completer(auto.complete)
 
 
 def show_table():
@@ -30,6 +49,11 @@ def show(data):
 
 
 def search(data):
+    commands = []
+    for x in data:
+        commands.append(x[0])
+    auto_command_complete(commands)
+
     std_id = input("Student ID: ")
     for x in data:
         if std_id == x[0]:
@@ -43,7 +67,12 @@ def search(data):
 
 
 def change_score(data):
+    commands = []
+    for x in data:
+        commands.append(x[0])
+    auto_command_complete(commands)
     std_id = input("Student ID: ")
+    auto_command_complete([])
     for x in data:
         if std_id == x[0]:
             test_name = input("Mid/Final? ")
@@ -79,8 +108,10 @@ def change_score(data):
 
 
 def search_grade(data):
-    grade = input("Grade to search: ")
     grade_list = ['A', 'B', 'C', 'D', 'F']
+    auto_command_complete(grade_list)
+    grade = input("Grade to search: ")
+    auto_command_complete([])
 
     if grade not in grade_list:
         print()
@@ -129,6 +160,10 @@ def remove_data(data):
         print()
         return
 
+    commands = []
+    for x in data:
+        commands.append(x[0])
+    auto_command_complete(commands)
     std_id = input("Student ID: ")
     for x in data:
         if std_id == x[0]:
@@ -147,7 +182,10 @@ def quit_program(data):
 
 
 def input_command():
+    commands = ["show", "search", "changescore", "searchgrade", "add", "remove", "quit"]
+    auto_command_complete(commands)
     comm = input("# ")
+    auto_command_complete([])
     return comm.lower()
 
 
@@ -220,11 +258,12 @@ def data_sort(data):
 
 
 def main():
+    readline.parse_and_bind('tab: complete')
     data = read_file()
     if data == -1:
         return
     data = data_processing(data)
-
+    print(data)
     show(data)
     while True:
         comm = input_command()
@@ -232,6 +271,7 @@ def main():
             show(data)
         elif comm == "search":
             search(data)
+            auto_command_complete([])
         elif comm == "changescore":
             change_score(data)
         elif comm == "searchgrade":
@@ -240,6 +280,7 @@ def main():
             add_data(data)
         elif comm == "remove":
             remove_data(data)
+            auto_command_complete([])
         elif comm == "quit":
             break
         else:
