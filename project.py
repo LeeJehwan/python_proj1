@@ -1,7 +1,7 @@
 import sys
 import os
 
-#test
+
 def show_table():
     print("{0:^12}".format("Student"), end="")
     print("{0:>14}".format("Name"), end="")
