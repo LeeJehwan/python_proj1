@@ -1,0 +1,6 @@
+20180021	Lee Hyori	93	95
+20180002	Lee Jieun	92	89
+20180009	Lee Yeonghee	81	84
+20180001	Hong Gildong	84	73
+20180006	Lee Sangsun	77	66
+20180007	Kim Cheolsu	75	62
